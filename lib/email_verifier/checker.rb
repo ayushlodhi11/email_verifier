@@ -39,6 +39,7 @@ class EmailVerifier::Checker
   def connect
     [25,587,465].each do |port|
       begin
+        p "port"
         server = next_server
         raise EmailVerifier::OutOfMailServersException.new("Unable to connect to any one of mail servers for #{@email}") if server.nil?
         p "#{server[:address]}, #{port}, #{@user_domain}"
