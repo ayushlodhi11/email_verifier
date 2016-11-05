@@ -37,15 +37,17 @@ class EmailVerifier::Checker
   end
 
   def connect
+    [25,587,465].each do |port|
     begin
       server = next_server
       raise EmailVerifier::OutOfMailServersException.new("Unable to connect to any one of mail servers for #{@email}") if server.nil?
-      @smtp = Net::SMTP.start server[:address], 25, @user_domain
+      @smtp = Net::SMTP.start server[:address], port, @user_domain
       return true
     rescue EmailVerifier::OutOfMailServersException => e
       raise EmailVerifier::OutOfMailServersException, e.message
     rescue => e
       retry
+    end
     end
   end
 
